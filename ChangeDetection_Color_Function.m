@@ -3,7 +3,7 @@
 % Vogel (1997).
 % Programmed by Kirsten Adam 2012 (updated June 2014)
 %
-%  "change" is "m", "no change" = "z" key
+%  "change" is "/", "no change" = "z" key
 %
 %  RECENT UPDATES: 
 %   - added text reminder of key mapping that stays on the screen 
@@ -18,7 +18,7 @@
 function ChangeDetection_Color_Function(p,win)
 % Build an output file and check to make sure that it doesn't exist yet
 % either
-fileName = [p.root,filesep,'Subject Data',filesep, p.subNum, '_ColorK.mat'];
+fileName = [p.root,filesep,'Subject Data',filesep,num2str(p.subNum), '_ColorK.mat'];
 if p.subNum ~= 0
     if exist(fileName)
         Screen('CloseAll');
@@ -146,8 +146,8 @@ for b = 1:prefs.numBlocks
         
         if p.showInstruct
             textSize = 18; 
-            showInstructText = ['Si el color es el mismo, pulse "z".\n'...
-                'Si el color es diferente, pulse "m". \n'];
+            showInstructText = ['If the color is the same, press "z".\n'...
+                'If the color is different, press "/". \n'];
             Screen('TextSize', win.onScreen, textSize); % 24 = number pixels
             DrawFormattedText(win.onScreen, showInstructText,win.centerX-150,15,win.white); 
         end
@@ -279,7 +279,7 @@ for b = 1:prefs.numBlocks
         % unify key names so we don't need to mess when switching from mac
         % to pc ...
         escape = KbName('ESCAPE');  % Mac == 'ESCAPE' % PC == 'esc'
-        prefs.changeKey = KbName('m'); % on mac, 56 % 191 == / pc
+        prefs.changeKey = KbName('/?'); % on mac, 56 % 191 == / pc
         prefs.nochangeKey = KbName('z'); % on mac, 29  % 90 == z
         space = KbName('space');
         
@@ -294,9 +294,6 @@ for b = 1:prefs.numBlocks
                     return;
                 end
                 kp = find(keyCode);
-                if numel(kp) > 1
-                    continue
-                end
                 if kp== prefs.changeKey || kp== prefs.nochangeKey  % previously 90/191, PC
                     stim.response(t,b)=kp;
                     rtEnd = GetSecs;
@@ -346,9 +343,9 @@ for b = 1:prefs.numBlocks
             tocInd = round(toc);
             Screen('FillRect',win.onScreen,win.foreColor,win.foreRect);            % Draw the foreground win
             Screen('FillOval',win.onScreen,win.black,win.fixRect);           % Draw the fixation point
-            Screen(win.onScreen, 'DrawText', 'Descanso.', win.centerX-110, win.centerY-75, [255 255 255]);
-            Screen(win.onScreen, 'DrawText',['Tiempo restante: ',char(num2str((prefs.breakLength*60)-tocInd))], win.centerX-110, win.centerY-40, [255 0 0 ]);
-            Screen(win.onScreen, 'DrawText', ['Bloque ',num2str(b),' de ',num2str(prefs.numBlocks),' completado.'], win.centerX-110, win.centerY+20, [255 255 255]);
+            Screen(win.onScreen, 'DrawText', 'Take a break.', win.centerX-110, win.centerY-75, [255 255 255]);
+            Screen(win.onScreen, 'DrawText',['Time Remaining: ',char(num2str((prefs.breakLength*60)-tocInd))], win.centerX-110, win.centerY-40, [255 0 0 ]);
+            Screen(win.onScreen, 'DrawText', ['Block ',num2str(b),' of ',num2str(prefs.numBlocks),' completed.'], win.centerX-110, win.centerY+20, [255 255 255]);
             Screen('Flip', win.onScreen);
         end
         %         else
@@ -381,7 +378,7 @@ for b = 1:prefs.numBlocks
         
         Screen('TextSize',win.onScreen,24);
         Screen('TextFont',win.onScreen,'Arial');
-        Screen(win.onScreen, 'DrawText', '¡El experimento ha terminado! Por favor, avise al investigador.', win.centerX-250, win.centerY-75, [255 255 255]);
+        Screen(win.onScreen, 'DrawText', 'Finished! Please see the experimenter.', win.centerX-250, win.centerY-75, [255 255 255]);
         Screen('Flip', win.onScreen);
         
         % Wait for a spacebar press to continue with next block
@@ -436,22 +433,15 @@ rectInstruct = [0 0 sizeInstruct(2) sizeInstruct(1)];
 rectTestCoor = [win.centerX,win.centerY-round(sizeInstruct(1)*.2)]; 
 
 
-InstructText = ['¡Recuerda los colores! \n'...
-    ...
-    'En este experimento aparecerán distintos cuadrados de colores.\n'...
-    'Usted tendrá que recordar esos colores. Después de un corto intervalo\n'...
-    'reaparecerá uno de los cuadrados. Usted tendrá que decidir si el color\n'...
-    'del cuadrado ha cambiado\n\n\n'...
-    ...
-    'INSTRUCCIONES\n'...
-    '1. Espera a que aparezcan los cuadrados.\n'...
-    '2. Observa los cuadrados. \n'...
-    '3. Recuerda los colores de los cuadrados cuadrados. \n'...
-    '4. Observe el nuevo cuadrado que se presenta\n\n'...
-    '5. ¿Es el mismo color que el cuadrado anterio? \n'...
-    'Si el color es el mismo, pulsa "z".\n'...
-    'Si el color es distinto, pulsa "m". \n\n'...
-    'Pulsa "espacio" para empezar.'];
+InstructText = ['Remember the colors! \n'...
+    '1. Wait for the squares to appear.\n'...
+    '2. See the squares \n'...
+    '3. Remember the squares \n'...
+    '4. Same or different? \n'...
+    '  \n'...
+    'If the color is the same, press "z".\n'...
+    'If the color is different, press "/". \n'...
+    'Press spacebar to begin'];
 
 % Show image again, but with explanatory text
 Screen('FillRect', win.onScreen, win.gray);
@@ -601,20 +591,16 @@ end
 function prefs = getPreferences
 %%%% Design conditions
 prefs.numBlocks = 4;
-prefs.nTrialsPerCondition = 40;
+prefs.nTrialsPerCondition = 5;
 prefs.setSizes = [4,6,8]; % only set size 2 for this experiment right now.
 prefs.change = [0,1]; % 0 = no change, 1 = change!
 
 %%%%% timing
 prefs.retentionInterval =  [1.000]; % win.refRate;% 1 sec  (or, if we don't do this we can jitter .... )
-prefs.stimulusDuration = [.150];%win.refRate/2;% 500 ms
+prefs.stimulusDuration = [.150]; %win.refRate/2;% 500 ms
 prefs.ITI = 1.000;  %prefs.retentionInterval;
 prefs.breakLength = .5; % number of minutes for block
 
-prefs.setSizes = [1,2,3]; 
-prefs.stimulusDuration = [1.0];
-prefs.retentionInterval =  [0.1000];
-prefs.ITI = .5000; 
 
 %%%%% stimulus size & positions
 prefs.stimSize = 72;

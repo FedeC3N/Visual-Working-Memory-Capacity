@@ -6,3 +6,9 @@
 
 # Ignore photo
 *.png
+
+# Ignore Psychtoolbox
+Psychtoolbox/
+
+# Igonre triggers information
+triggers/
