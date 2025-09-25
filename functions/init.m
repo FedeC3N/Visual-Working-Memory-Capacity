@@ -36,7 +36,10 @@ while not_valid
         end
         
         
+    else
+        not_valid = 0;
     end
+    
 end
 
 % Initiate a random state
