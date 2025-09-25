@@ -24,7 +24,7 @@ defAns = {'',num2str(s)};                                           % fill in so
 box = inputdlg(prompt,'Enter Subject Info',1,defAns);       % build the GUI
 
 if length(box) == length(defAns)                            % check to make sure something was typed in
-    p.subNum = str2num(box{1});
+    p.subNum = box{1};
     p.rndSeed = str2num(box{2});  % made random seed the same for all subjects!!!
     rand('state',p.rndSeed);
 else
@@ -36,7 +36,7 @@ end
 p.is_PC = ispc;  % ispc function detects if it's a pc computer or not
 p.portCodes = 0;  %1 = use p.portCodes (we're in the booth)
 p.multiColor = 0; 
-p.windowed = 0; % 1 = small win for easy debugging!
+p.windowed = 1; % 1 = small win for easy debugging!
 p.startClick = 0; % in the discrete WR report experiment -- click to start trial if 1.
 p.showInstruct = 0; % keep the instructions on the screen the whole time in the change detection experiment
 %-------------------------------------------------------------------------
