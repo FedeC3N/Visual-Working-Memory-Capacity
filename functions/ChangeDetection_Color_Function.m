@@ -18,7 +18,7 @@
 function ChangeDetection_Color_Function(p,win)
 % Build an output file and check to make sure that it doesn't exist yet
 % either
-fileName = [p.root,filesep,'Subject Data',filesep, p.subNum, '_ColorK.mat'];
+fileName = p.fileName;
 if p.subNum ~= 0
     if exist(fileName)
         Screen('CloseAll');
