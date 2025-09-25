@@ -1,0 +1,8 @@
+# Ignore c data
+*.c
+
+# Ignore subject Data
+*.mat
+
+# Ignore photo
+*.png
