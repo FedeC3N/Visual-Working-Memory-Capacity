@@ -15,12 +15,15 @@ addpath('./functions')
 % Init options
 [p,win] = init();
 
+% Config options
+prefs = getPreferences();  
+
 % Run Experiment
-ChangeDetection_Color_Function(p,win);
+ChangeDetection_Color_Function(p,win,prefs);
 
 % Close psychtoolbox window & Postpare the environment
 sca;
-ListenChar(0);
+% ListenChar(0);
 if p.is_PC
     ShowHideWinTaskbarMex(1);
 end

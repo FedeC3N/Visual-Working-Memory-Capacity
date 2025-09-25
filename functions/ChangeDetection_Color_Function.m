@@ -15,18 +15,17 @@
 %  distance between the colors in the array, and you can change when repeat
 %  colors are allowed)
 %-------------------------------------------------------------------------
-function ChangeDetection_Color_Function(p,win)
+function ChangeDetection_Color_Function(p,win,prefs)
 
 %----------------------------------------------------
 % Get screen params, build the display
 %----------------------------------------------------
 commandwindow; % select the command win to avoid typing in open scripts
-ListenChar(2); % don't print things in the command window
+% ListenChar(2); % don't print things in the command window
 HideCursor; 
 
 % set the random state to the random seed at the beginning of the experiment!!
 rng(p.rndSeed); 
-prefs = getPreferences();  % function that grabs all of our preferences
 
 % set up fixation point rect (b/c uses both prefs and win)
 win.fixRect = [(win.centerX - prefs.fixationSize),(win.centerY - prefs.fixationSize), ...
@@ -331,48 +330,37 @@ for b = 1:prefs.numBlocks
     % tell subjects that they've finished the current block / the experiment
     if b<prefs.numBlocks
         
-        %         if p.startClick
-        tic
-        while toc < prefs.breakLength*60;
-            tocInd = round(toc);
-            Screen('FillRect',win.onScreen,win.foreColor,win.foreRect);            % Draw the foreground win
-            Screen('FillOval',win.onScreen,win.black,win.fixRect);           % Draw the fixation point
-            Screen(win.onScreen, 'DrawText', 'Descanso.', win.centerX-110, win.centerY-75, [255 255 255]);
-            Screen(win.onScreen, 'DrawText',['Tiempo restante: ',char(num2str((prefs.breakLength*60)-tocInd))], win.centerX-110, win.centerY-40, [255 0 0 ]);
-            Screen(win.onScreen, 'DrawText', ['Bloque ',num2str(b),' de ',num2str(prefs.numBlocks),' completado.'], win.centerX-110, win.centerY+20, [255 255 255]);
-            Screen('Flip', win.onScreen);
+        
+        Screen('TextSize',win.onScreen,60);
+        Screen('TextFont',win.onScreen,'Arial');
+        Screen(win.onScreen, 'DrawText', 'DESCANSO', win.centerX-170, win.centerY-200);
+        Screen('TextSize',win.onScreen,32);
+        Screen(win.onScreen, 'DrawText', ['Bloque ',num2str(b),' de ',num2str(prefs.numBlocks),' completado.'], win.centerX-200, win.centerY, [255 255 255]);
+        
+        Screen(win.onScreen, 'DrawText', 'Pulse "espacio" para empezar un nuevo bloque.', win.centerX-320, win.centerY+50, [255 255 255]);
+        Screen('TextSize',win.onScreen,32);
+        Screen('Flip', win.onScreen);
+        
+        % Wait for a spacebar press to continue with next block
+        while 1
+            [keyIsDown,secs,keyCode]=KbCheck;
+            if keyIsDown
+                kp = find(keyCode);
+                if kp == space
+                    break;
+                end
+            end
         end
-        %         else
-        %
-        %             Screen('TextSize',win.onScreen,24);
-        %             Screen('TextFont',win.onScreen,'Arial');
-        %             Screen(win.onScreen, 'FillRect', win.gray);
-        %             Screen('FillOval',win.onScreen,win.black,win.fixRect);           % Draw the fixation point
-        %             Screen(win.onScreen, 'DrawText', 'Take a break.  Press spacebar to continue.', win.centerX-250, win.centerY-150, [255 255 255]);
-        %             Screen(win.onScreen, 'DrawText', ['Press "z" if the color does not change'], win.centerX-250, win.centerY-75, [255 255 255]);
-        %             Screen(win.onScreen, 'DrawText', ['Press "/" if the color changes'], win.centerX-250, win.centerY-50, [255 255 255]);
-        %             Screen(win.onScreen, 'DrawText', ['Block ',num2str(b),' of ',num2str(prefs.numBlocks),' completed.'], win.centerX-250, win.centerY+30, [255 255 255]);
-        %             Screen('Flip', win.onScreen);
-        %
-        %             % Wait for a spacebar press to continue with next block
-        %             while 1
-        %                 [keyIsDown,secs,keyCode]=KbCheck;
-        %                 if keyIsDown
-        %                     kp = find(keyCode);
-        %                     if kp == space
-        %                         break;
-        %                     end
-        %                 end
-        %             end
-        %         end
         
     end
     
-    if b == prefs.numBlocks;
+    if b == prefs.numBlocks
         
-        Screen('TextSize',win.onScreen,24);
+        Screen('TextSize',win.onScreen,32);
         Screen('TextFont',win.onScreen,'Arial');
-        Screen(win.onScreen, 'DrawText', '¡El experimento ha terminado! Por favor, avise al investigador.', win.centerX-250, win.centerY-75, [255 255 255]);
+        Screen(win.onScreen, 'DrawText', '¡El experimento ha terminado!', win.centerX-250, win.centerY-20, [255 255 255]);
+        Screen('TextSize',win.onScreen,24);
+        Screen(win.onScreen, 'DrawText', 'Por favor, avise al investigador.', win.centerX-200, win.centerY+20, [255 255 255]);
         Screen('Flip', win.onScreen);
         
         % Wait for a spacebar press to continue with next block
@@ -389,17 +377,7 @@ for b = 1:prefs.numBlocks
     end
     
     
-    %     % Wait for a spacebar press to continue with next block
-    %     while 1
-    %         [keyIsDown,secs,keyCode]=KbCheck;
-    %         if keyIsDown
-    %             kp = find(keyCode);
-    %             if kp == space
-    %                 break;
-    %             end
-    %         end
-    %     end
-    
+
     if p.portCodes % port code for space pressed to begin next block!
         write_parallel(response_port,30);
     end
