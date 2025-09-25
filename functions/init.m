@@ -1,4 +1,4 @@
-function p = init()
+function [p,win] = init()
 
 % Options
 p.is_PC = ispc;  % ispc function detects if it's a pc computer or not
@@ -42,6 +42,15 @@ end
 % Initiate a random state
 p.rndSeed = round(sum(100*clock));
 rand('state',p.rndSeed);
+
+% Build psychtoolbox window & hide the task bar
+win = openWindow(p);
+
+%Manually hide the task bar so it doesn't pop up because of flipping
+%the PTB screen during GetMouse:
+if p.is_PC
+    ShowHideWinTaskbarMex(0);
+end
 
 
 end

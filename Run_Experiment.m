@@ -4,7 +4,7 @@
 %
 % Federico Ramírez-Toraño 09/2025
 %-------------------------------------------------------------------------
-clear  
+clear
 close all
 warning('off','MATLAB:dispatcher:InexactMatch');  % turn off the case mismatch warning (it's annoying)
 AssertOpenGL;    % make sure openGL rendering is working (aka psychtoolbox is on the path)
@@ -12,34 +12,18 @@ AssertOpenGL;    % make sure openGL rendering is working (aka psychtoolbox is on
 % Add the paths of interest
 addpath('./functions')
 
-%-------------------------------------------------------------------------
 % Init options
-%-------------------------------------------------------------------------
-p = init();
+[p,win] = init();
 
-
-%-------------------------------------------------------------------------
-% Build psychtoolbox window & hide the task bar
-%-------------------------------------------------------------------------
-win = openWindow(p);
-%Manually hide the task bar so it doesn't pop up because of flipping
-%the PTB screen during GetMouse:
-if p.is_PC
-    ShowHideWinTaskbarMex(0);
-end
-%-------------------------------------------------------------------------
-% Run Experiment 1
-%-------------------------------------------------------------------------
+% Run Experiment
 ChangeDetection_Color_Function(p,win);
-%-------------------------------------------------------------------------
+
 % Close psychtoolbox window & Postpare the environment
-%-------------------------------------------------------------------------
 sca;
 ListenChar(0);
 if p.is_PC
-ShowHideWinTaskbarMex(1);
+    ShowHideWinTaskbarMex(1);
 end
-close all;
-clear all;
+
 
 
