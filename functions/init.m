@@ -41,10 +41,10 @@ while not_valid
     end
     
 end
+p.fileName = fileName;
 
 % Initiate a random state
-p.rndSeed = round(sum(100*clock));
-rand('state',p.rndSeed);
+p.rndSeed = sum(100*clock);
 
 % Build psychtoolbox window & hide the task bar
 win = openWindow(p);

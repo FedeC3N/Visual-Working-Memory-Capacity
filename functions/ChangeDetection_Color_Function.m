@@ -16,16 +16,7 @@
 %  colors are allowed)
 %-------------------------------------------------------------------------
 function ChangeDetection_Color_Function(p,win)
-% Build an output file and check to make sure that it doesn't exist yet
-% either
-fileName = p.fileName;
-if p.subNum ~= 0
-    if exist(fileName)
-        Screen('CloseAll');
-        msgbox('File already exists!', 'modal')
-        return;
-    end
-end
+
 %----------------------------------------------------
 % Get screen params, build the display
 %----------------------------------------------------
@@ -34,7 +25,7 @@ ListenChar(2); % don't print things in the command window
 HideCursor; 
 
 % set the random state to the random seed at the beginning of the experiment!!
-rand('state',p.rndSeed);
+rng(p.rndSeed); 
 prefs = getPreferences();  % function that grabs all of our preferences
 
 % set up fixation point rect (b/c uses both prefs and win)
@@ -289,7 +280,7 @@ for b = 1:prefs.numBlocks
                 if keyCode(escape)                              % if escape is pressed, bail out
                     ListenChar(0);
                     % save data file at the end of each block
-                    save(fileName,'p','stim','prefs');
+                    save(p.fileName,'p','stim','prefs');
                     Screen('CloseAll');
                     return;
                 end
@@ -335,7 +326,7 @@ for b = 1:prefs.numBlocks
     end    % end of trial loop
     
     % save data file at the end of each block
-    save(fileName,'p','stim','prefs');
+    save(p.fileName,'p','stim','prefs');
     
     % tell subjects that they've finished the current block / the experiment
     if b<prefs.numBlocks
@@ -425,71 +416,7 @@ end
 %-------------------------------------------------------------------------
 %  ADDITIONAL FUNCTIONS EMBEDDED IN SCRIPT !!
 %-------------------------------------------------------------------------
-function instruct(win)
 
-InstructImage = imread([pwd,'/Instructions_CD'],'png','BackgroundColor',[win.gray/255,win.gray/255,win.gray/255]);
-textOffset = 200;
-textSize = 18;
-
-sizeInstruct = size(InstructImage);
-rectInstruct = [0 0 sizeInstruct(2) sizeInstruct(1)];
-rectTestCoor = [win.centerX,win.centerY-round(sizeInstruct(1)*.2)]; 
-
-
-InstructText = ['¡Recuerda los colores! \n'...
-    ...
-    'En este experimento aparecerán distintos cuadrados de colores.\n'...
-    'Usted tendrá que recordar esos colores. Después de un corto intervalo\n'...
-    'reaparecerá uno de los cuadrados. Usted tendrá que decidir si el color\n'...
-    'del cuadrado ha cambiado\n\n\n'...
-    ...
-    'INSTRUCCIONES\n'...
-    '1. Espera a que aparezcan los cuadrados.\n'...
-    '2. Observa los cuadrados. \n'...
-    '3. Recuerda los colores de los cuadrados cuadrados. \n'...
-    '4. Observe el nuevo cuadrado que se presenta\n\n'...
-    '5. ¿Es el mismo color que el cuadrado anterio? \n'...
-    'Si el color es el mismo, pulsa "z".\n'...
-    'Si el color es distinto, pulsa "m". \n\n'...
-    'Pulsa "espacio" para empezar.'];
-
-% Show image again, but with explanatory text
-Screen('FillRect', win.onScreen, win.gray);
-Screen('TextSize', win.onScreen, win.fontsize);
-
-Screen('PutImage',win.onScreen,InstructImage,CenterRectOnPoint(rectInstruct,rectTestCoor(1),rectTestCoor(2)));
-Screen('TextSize', win.onScreen, textSize); % 24 = number pixels
-DrawFormattedText(win.onScreen, InstructText, win.centerX-textOffset,win.centerY+(sizeInstruct(1)*.35),win.white);
-Screen('Flip', win.onScreen);
-
-% GetClicks(win.onScreen);
-
-% Screen('FillRect', win.onScreen, win.gray);
-% Screen('TextSize', win.onScreen, win.fontsize);
-% Screen(win.onScreen, 'DrawText', 'Remember the colors.', win.centerX-250, win.centerY-150, [255 255 255]);
-% Screen(win.onScreen, 'DrawText', ['Press "z" if the color does not change'], win.centerX-250, win.centerY-75, [255 255 255]);
-% Screen(win.onScreen, 'DrawText', ['Press "/" if the color changes'], win.centerX-250, win.centerY-50, [255 255 255]);
-% Screen(win.onScreen, 'DrawText', 'Press space to begin.', win.centerX-250, win.centerY+30, [255 255 255]);
-% Screen('FillOval',win.onScreen,win.black,win.fixRect);           % Draw the fixation point
-% Screen('Flip', win.onScreen);
-
-% Wait for a spacebar press to continue with next block
-while KbCheck; end;
-KbName('UnifyKeyNames');   % This command switches keyboard mappings to the OSX naming scheme, regardless of computer.
-space = KbName('space');
-while 1
-    [keyIsDown,secs,keyCode]=KbCheck;
-    if keyIsDown
-        kp = find(keyCode);
-        if kp == space
-            break;
-        end
-    end
-end
-
-clear InstructImage
-
-end
 %-------------------------------------------------------------------------
 function [xPos,yPos] = getStimLocs(prefs,win,nItems)
 % segment the inner window into four quadrants - for xCoords, 1st
@@ -595,39 +522,4 @@ elseif nItems == 8
 end
 
 end
-%-------------------------------------------------------------------------
-%  CHANGE PREFERENCES!
-%-------------------------------------------------------------------------
-function prefs = getPreferences
-%%%% Design conditions
-prefs.numBlocks = 4;
-prefs.nTrialsPerCondition = 40;
-prefs.setSizes = [4,6,8]; % only set size 2 for this experiment right now.
-prefs.change = [0,1]; % 0 = no change, 1 = change!
 
-%%%%% timing
-prefs.retentionInterval =  [1.000]; % win.refRate;% 1 sec  (or, if we don't do this we can jitter .... )
-prefs.stimulusDuration = [.150];%win.refRate/2;% 500 ms
-prefs.ITI = 1.000;  %prefs.retentionInterval;
-prefs.breakLength = .5; % number of minutes for block
-
-prefs.setSizes = [1,2,3]; 
-prefs.stimulusDuration = [1.0];
-prefs.retentionInterval =  [0.1000];
-prefs.ITI = .5000; 
-
-%%%%% stimulus size & positions
-prefs.stimSize = 72;
-prefs.minDist = prefs.stimSize*1.5;
-prefs.fixationSize = 6;
-
-%%%%% randomize trial order of full factorial design order
-prefs.fullFactorialDesign = fullfact([length(prefs.setSizes), ...
-    length(prefs.change), ...
-    length(prefs.retentionInterval), ...
-    length(prefs.stimulusDuration), ...
-    prefs.nTrialsPerCondition]);  %add prefs.numBlocks? No, because we are using fully counterbalanced blocks.
-
-%%%%% total number of trials in each fully-crossed block.
-prefs.numTrials = size(prefs.fullFactorialDesign,1);
-end
