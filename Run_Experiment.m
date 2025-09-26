@@ -12,11 +12,11 @@ AssertOpenGL;    % make sure openGL rendering is working (aka psychtoolbox is on
 % Add the paths of interest
 addpath('./functions')
 
+% Config options
+prefs = getPreferences();
+
 % Init options
 [p,win] = init();
-
-% Config options
-prefs = getPreferences();  
 
 % Run Experiment
 ChangeDetection_Color_Function(p,win,prefs);

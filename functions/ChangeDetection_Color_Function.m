@@ -30,12 +30,16 @@ rng(p.rndSeed);
 % set up fixation point rect (b/c uses both prefs and win)
 win.fixRect = [(win.centerX - prefs.fixationSize),(win.centerY - prefs.fixationSize), ...
     (win.centerX  + prefs.fixationSize), (win.centerY + prefs.fixationSize)];
+
+
 %-------------------------------------------------------------------------
 % Port Settings - % booth 1 p.portCodes: event DCC8 / response
 if p.portCodes
     event_port = ['DCC8'];
     response_port = ['DCD8'];
 end
+
+
 %--------------------------------------------------------
 % Preallocate some variable structures! :)
 %--------------------------------------------------------
@@ -57,8 +61,15 @@ stim.probeColor = NaN(prefs.numTrials,prefs.numBlocks); % color presented during
 % item. stim.itemColors{trialNumber,blockNumber} = [col1,col2...]. To
 % identify the RGB value, find the matching row in stim.colorList.
 %---------------------------------------------------
+
+
 %  Put up instructions
 instruct(win)
+
+%%%%%%% PUT-TRIGGER %%%%%%% 
+%
+
+
 %--------------------------------s-------------------
 %  if multiColor, pick out new colors from the colorwheel
 %---------------------------------------------------
@@ -88,6 +99,8 @@ if p.multiColor
     end
    
 end
+
+
 %---------------------------------------------------
 % Begin Block loop
 %---------------------------------------------------
@@ -265,18 +278,12 @@ for b = 1:prefs.numBlocks
         rtStart = GetSecs;
         
         while KbCheck; end;
-        KbName('UnifyKeyNames');   % This command switches keyboard mappings to the OSX naming scheme, regardless of computer.
-        % unify key names so we don't need to mess when switching from mac
-        % to pc ...
-        escape = KbName('ESCAPE');  % Mac == 'ESCAPE' % PC == 'esc'
-        prefs.changeKey = KbName('m'); % on mac, 56 % 191 == / pc
-        prefs.nochangeKey = KbName('z'); % on mac, 29  % 90 == z
-        space = KbName('space');
         
+        % Check the answer
         while 1
             [keyIsDown,secs,keyCode]=KbCheck;
             if keyIsDown
-                if keyCode(escape)                              % if escape is pressed, bail out
+                if keyCode(prefs.keys.escape)                              % if escape is pressed, bail out
                     ListenChar(0);
                     % save data file at the end of each block
                     save(p.fileName,'p','stim','prefs');
@@ -285,9 +292,9 @@ for b = 1:prefs.numBlocks
                 end
                 kp = find(keyCode);
                 if numel(kp) > 1
-                    continue
+                    kp = kp(2);
                 end
-                if kp== prefs.changeKey || kp== prefs.nochangeKey  % previously 90/191, PC
+                if kp== prefs.keys.different_color || kp== prefs.keys.same_color % previously 90/191, PC
                     stim.response(t,b)=kp;
                     rtEnd = GetSecs;
                     break
@@ -309,13 +316,13 @@ for b = 1:prefs.numBlocks
         
         % Check accuracy
         if change == 1
-            if stim.response(t,b) == prefs.changeKey  % 191 == / on pc
+            if stim.response(t,b) == prefs.keys.different_color
                 stim.accuracy(t,b)=1;
             else
                 stim.accuracy(t,b)=0;
             end
         else
-            if stim.response(t,b) == prefs.nochangeKey  % 90 == z on pc
+            if stim.response(t,b) == prefs.keys.same_color 
                 stim.accuracy(t,b)=1;
             else
                 stim.accuracy(t,b)=0;
@@ -346,7 +353,10 @@ for b = 1:prefs.numBlocks
             [keyIsDown,secs,keyCode]=KbCheck;
             if keyIsDown
                 kp = find(keyCode);
-                if kp == space
+                if numel(kp) > 1
+                    kp = kp(2);
+                end
+                if kp == prefs.keys.space
                     break;
                 end
             end
@@ -368,7 +378,10 @@ for b = 1:prefs.numBlocks
             [keyIsDown,secs,keyCode]=KbCheck;
             if keyIsDown
                 kp = find(keyCode);
-                if kp == space
+                if numel(kp) > 1
+                    kp = kp(2);
+                end
+                if kp == prefs.keys.space
                     break;
                 end
             end
