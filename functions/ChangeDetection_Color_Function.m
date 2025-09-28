@@ -8,14 +8,8 @@
 %  RECENT UPDATES:
 %   - added text reminder of key mapping that stays on the screen
 %
-%  OPTIONS:
-%  p.multiColor: randomly chooses some far-apart colors on the colorwheel! this way, we
-%  can make sure that the colors aren't easily memorizable but "highly"
-%  discriminable (NOTE: you can change prefs.minColorDist for a minimum
-%  distance between the colors in the array, and you can change when repeat
-%  colors are allowed)
 %-------------------------------------------------------------------------
-function ChangeDetection_Color_Function(p,win,stim,prefs)
+function ChangeDetection_Color_Function(prefs,win,stim)
 
 %----------------------------------------------------
 % Get screen params, build the display
@@ -375,11 +369,15 @@ for b = 1:prefs.numBlocks
         Screen('TextSize',win.onScreen,60);
         Screen('TextFont',win.onScreen,'Arial');
         Text1 = '¡El experimento ha terminado!';
-        DrawFormattedText(win.onScreen, Text1, 'center',win.centerY-50,win.white);
+        latin1_bytes = unicode2native(Text1, 'ISO-8859-1');
+        Text1_converted = char(latin1_bytes);
+        DrawFormattedText(win.onScreen, Text1_converted, 'center',win.centerY-50,win.white);
 
         Screen('TextSize',win.onScreen,32);
         Text2 = 'Por favor, avise al investigador.';
-        DrawFormattedText(win.onScreen, Text2, 'center',win.centerY+50,win.white);
+        latin1_bytes = unicode2native(Text2, 'ISO-8859-1');
+        Text2_converted = char(latin1_bytes);
+        DrawFormattedText(win.onScreen, Text2_converted, 'center',win.centerY+50,win.white);
 
         Screen('Flip', win.onScreen);
 

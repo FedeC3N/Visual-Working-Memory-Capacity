@@ -1,4 +1,4 @@
-function [p,win,stim] = init(prefs)
+function [prefs,win,stim] = init(prefs)
 
 % Output directory
 if ~exist(prefs.output_dir)
@@ -12,8 +12,8 @@ while not_valid
     % Ask for the code
     prompt = {'Subject Code'};
     box = inputdlg(prompt,'');
-    p.subNum = box{1};
-    fileName = [p.output_dir,filesep, p.subNum, '_ColorK.mat'];
+    prefs.subNum = box{1};
+    fileName = [prefs.output_dir,filesep, prefs.subNum, '_ColorK.mat'];
 
     % If exist, overwrite?
     if exist (fileName)
@@ -32,13 +32,13 @@ while not_valid
     end
 
 end
-p.fileName = fileName;
+prefs.fileName = fileName;
 
 % Initiate a random state
-p.rndSeed = sum(100*clock);
+prefs.rndSeed = sum(100*clock);
 
 % Build psychtoolbox window & hide the task bar
-win = openWindow(p);
+win = openWindow(prefs);
 
 % set up fixation point rect (b/c uses both prefs and win)
 win.fixRect = [(win.centerX - prefs.fixationSize),(win.centerY - prefs.fixationSize), ...
@@ -46,7 +46,7 @@ win.fixRect = [(win.centerX - prefs.fixationSize),(win.centerY - prefs.fixationS
 
 %Manually hide the task bar so it doesn't pop up because of flipping
 %the PTB screen during GetMouse:
-if p.is_PC
+if prefs.is_PC
     ShowHideWinTaskbarMex(0);
 end
 

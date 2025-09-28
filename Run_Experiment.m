@@ -17,10 +17,10 @@ addpath('./functions')
 prefs = getPreferences();
 
 % Init options
-[p,win,stim] = init(prefs);
+[prefs,win,stim] = init(prefs);
 
 % Run Experiment
-ChangeDetection_Color_Function(p,win,stim,prefs);
+ChangeDetection_Color_Function(prefs,win,stim);
 
 % Close psychtoolbox window & Postpare the environment
 sca;

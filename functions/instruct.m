@@ -20,7 +20,7 @@ sizeInstruct = size(InstructImage);
 rectInstruct = [0 0 sizeInstruct(2) sizeInstruct(1)];
 rectTestCoor = [win.centerX,win.centerY-round(sizeInstruct(1)*0.18)];
 
-
+% Instruction text to plot
 InstructText1 = ['¡Recuerda los colores!'];
 InstructText2 = [...
     'En este experimento aparecerán distintos cuadrados de colores. Usted tendrá que recordar esos colores.\n'...
@@ -35,21 +35,29 @@ InstructText3 = [...
     '¿Es el mismo color que el cuadrado anterior? \n'...
     'Si el color es el mismo, pulse "Control Izquierdo".\n'...
     'Si el color es distinto, pulse "Control Derecho". \n\n'...
-    'Pulsa "espacio" para empezar...'];
+    'Pulse "espacio" para empezar...'];
+
+
+% Convert the text to one supported by Psychtoolbox
+latin1_bytes = unicode2native(InstructText1, 'ISO-8859-1');
+InstructText1_converted = char(latin1_bytes);
+latin1_bytes = unicode2native(InstructText2, 'ISO-8859-1');
+InstructText2_converted = char(latin1_bytes);
+latin1_bytes = unicode2native(InstructText3, 'ISO-8859-1');
+InstructText3_converted = char(latin1_bytes);
 
 % Show instructions
-Screen('TextFont', win.onScreen, 'DejaVu Sans');  % Or Arial, depending on your system
-Screen('TextEncodingLocale', 'UTF-8');
 Screen('FillRect', win.onScreen, win.gray);
 Screen('PutImage',win.onScreen,InstructImage,CenterRectOnPoint(rectInstruct,rectTestCoor(1),rectTestCoor(2)));
 Screen('TextSize', win.onScreen, 32);
 Screen('TextStyle', win.onScreen, 1);
-DrawFormattedText(win.onScreen, InstructText1, 'center',win.centerY-330,win.white);
+DrawFormattedText(win.onScreen, InstructText1_converted, 'center',win.centerY-330,win.white);
 Screen('TextSize', win.onScreen, 18);
 Screen('TextStyle', win.onScreen, 0);
-DrawFormattedText(win.onScreen, InstructText2, 'center',win.centerY-290,win.white,[],[],[],1.5);
-DrawFormattedText(win.onScreen, InstructText3, 'center',win.centerY+130,win.white,[],[],[],1.2);
+DrawFormattedText(win.onScreen, InstructText2_converted, 'center',win.centerY-290,win.white,[],[],[],1.5);
+DrawFormattedText(win.onScreen, InstructText3_converted, 'center',win.centerY+130,win.white,[],[],[],1.2);
 Screen('Flip', win.onScreen);
+
 
 
 

@@ -1,17 +1,15 @@
-function win = openWindow(p) % open up the window!
+function win = openWindow(prefs) % open up the window!
 
-win.screenNumber = p.screenNumber;
+win.screenNumber = prefs.screenNumber;
 
-%   p.windowed = 0; %%% 1  == smaller screen for debugging; 0 === full-sized screen for experiment
-if p.windowed
+if prefs.windowed
 
     % Get the screen resolution
-    screenNumber = max(Screen('Screens'));
-    [screenWidth, screenHeight] = Screen('WindowSize', screenNumber);
+    [screenWidth, screenHeight] = Screen('WindowSize', win.screenNumber);
 
     % Define desired window size (¼ of screen)
-    winWidth = round(screenWidth / 4);
-    winHeight = round(screenHeight / 4);
+    winWidth = round(screenWidth / 2);
+    winHeight = round(screenHeight / 2);
 
     % Position: left-center of the screen
     left = 0;
@@ -24,13 +22,11 @@ if p.windowed
 
     % Open the window in that position and size
     [win.onScreen, rect] = Screen('OpenWindow', win.screenNumber, [128 128 128], winRect);
-
-    [win.onScreen rect] = Screen('OpenWindow', win.screenNumber, [128 128 128],[0 0 1024 768],[],[],[]);
-    win.screenX = 1024;
-    win.screenY = 768;
-    win.screenRect = [0 0 1024 768];
-    win.centerX = (1024)/2; % center of screen in X direction
-    win.centerY = (768)/2; % center of screen in Y direction
+    win.screenX = winWidth;
+    win.screenY = winHeight;
+    win.screenRect = winRect;
+    win.centerX = win.screenX/2; % center of screen in X direction
+    win.centerY = win.screenY/2; % center of screen in Y direction
     win.centerXL = floor(mean([0 win.centerX]/2)); % center of left half of screen in X direction
     win.centerXR = floor(mean([win.centerX win.screenX]/2)); % center of right half of screen in X direction
         % % Compute foreground and fixation rectangles
