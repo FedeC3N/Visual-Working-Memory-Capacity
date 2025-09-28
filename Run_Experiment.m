@@ -2,7 +2,7 @@
 % Run a Visual Working Memory Capacity task based on Luck and Vogel (1997)
 % Modifications to "Kirsten Adam, June 2014 (updated Oct 2014) "
 %
-% Federico Ramírez-Toraño 09/2025
+% Federico RamÃ­rez-ToraÃ±o 09/2025
 %-------------------------------------------------------------------------
 clear
 close all
@@ -16,14 +16,14 @@ addpath('./functions')
 prefs = getPreferences();
 
 % Init options
-[p,win] = init();
+[p,win,stim] = init(prefs);
 
 % Run Experiment
-ChangeDetection_Color_Function(p,win,prefs);
+ChangeDetection_Color_Function(p,win,stim,prefs);
 
 % Close psychtoolbox window & Postpare the environment
 sca;
-% ListenChar(0);
+%ListenChar(0);
 if p.is_PC
     ShowHideWinTaskbarMex(1);
 end

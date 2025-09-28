@@ -1,5 +1,8 @@
 function prefs = getPreferences
 
+% Load the package needed
+pkg load statistics
+
 % Define answers and important keys
 KbName('UnifyKeyNames');
 prefs.keys.escape = KbName('ESCAPE');
@@ -7,9 +10,12 @@ prefs.keys.space = KbName('space');
 prefs.keys.same_color = 162; % Left control
 prefs.keys.different_color = 163; % Right control
 
+% Decide the screen to use
+prefs.screenNumber = max(Screen('Screens'));
+
 % Design conditions
 prefs.numBlocks = 4;
-prefs.nTrialsPerCondition = 80;
+prefs.nTrialsPerCondition = 20; % Per condition and block
 prefs.setSizes = [4,6,8]; % Condition = Number of squares presented
 prefs.change = [0,1];
 prefs.change_label = {'No change', 'Change'};

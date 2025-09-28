@@ -1,19 +1,38 @@
-function win = openWindow(p) % open up the window! 
+function win = openWindow(p) % open up the window!
 
-win.screenNumber = max(Screen('Screens'));
-win.screenNumber = 1;
-% win.refRate = Screen('FrameRate',s);
+win.screenNumber = p.screenNumber;
 
 %   p.windowed = 0; %%% 1  == smaller screen for debugging; 0 === full-sized screen for experiment
 if p.windowed
+
+    % Get the screen resolution
+    screenNumber = max(Screen('Screens'));
+    [screenWidth, screenHeight] = Screen('WindowSize', screenNumber);
+
+    % Define desired window size (¼ of screen)
+    winWidth = round(screenWidth / 4);
+    winHeight = round(screenHeight / 4);
+
+    % Position: left-center of the screen
+    left = 0;
+    top = round((screenHeight - winHeight) / 2);
+    right = left + winWidth;
+    bottom = top + winHeight;
+
+    % Build the window rectangle
+    winRect = [left, top, right, bottom];
+
+    % Open the window in that position and size
+    [win.onScreen, rect] = Screen('OpenWindow', win.screenNumber, [128 128 128], winRect);
+
     [win.onScreen rect] = Screen('OpenWindow', win.screenNumber, [128 128 128],[0 0 1024 768],[],[],[]);
     win.screenX = 1024;
     win.screenY = 768;
     win.screenRect = [0 0 1024 768];
     win.centerX = (1024)/2; % center of screen in X direction
     win.centerY = (768)/2; % center of screen in Y direction
-    win.centerXL = floor(mean([0 win.centerX])); % center of left half of screen in X direction
-    win.centerXR = floor(mean([win.centerX win.screenX])); % center of right half of screen in X direction
+    win.centerXL = floor(mean([0 win.centerX]/2)); % center of left half of screen in X direction
+    win.centerXR = floor(mean([win.centerX win.screenX]/2)); % center of right half of screen in X direction
         % % Compute foreground and fixation rectangles
     win.foreRect = round(win.screenRect./1.35);
     win.foreRect = CenterRect(win.foreRect,win.screenRect);
@@ -38,10 +57,6 @@ Screen('BlendFunction', win.onScreen, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
 win.black    = BlackIndex(win.onScreen);
 win.white    = WhiteIndex(win.onScreen);
 win.gray     = mean([win.black win.white]);
-if p.multiColor
-    win.gray = mean([win.black win.black win.white]);
-end
-
 win.backColor = win.gray;
 win.foreColor = win.gray;
 
@@ -51,10 +66,10 @@ win.colors_9 = [255 0 0; ... % red
     0 0 255; ...% blue
     255 255 0; ... % yellow
     255 0 255; ... % magenta
-    0 255 255; ... % cyan 
+    0 255 255; ... % cyan
     255 255 255; ... % white
     1 1 1; ... %black
-    255 128 0]; % orange! 
+    255 128 0]; % orange!
 
 %%%% 7 colors mat
 win.colors_7 = [255 0 0;... % red
