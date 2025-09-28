@@ -25,7 +25,7 @@ ChangeDetection_Color_Function(prefs,win,stim);
 % Close psychtoolbox window & Postpare the environment
 sca;
 %ListenChar(0);
-if p.is_PC
+if prefs.is_PC
     ShowHideWinTaskbarMex(1);
 end
 

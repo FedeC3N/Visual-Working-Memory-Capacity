@@ -51,7 +51,7 @@ prefs.numTrials = size(prefs.fullFactorialDesign,1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% Options
 prefs.is_PC = ispc;  % ispc function detects if it's a pc computer or not
-prefs.windowed = 1; % 1 = small win for easy debugging!
+prefs.windowed = 0; % 1 = small win for easy debugging!
 prefs.screenNumber = prefs.screenNumber;
 prefs.parallel_port = hex2dec('3FE0');  % Set your port address here
 prefs.output_dir = fullfile('.','data','conductual');
