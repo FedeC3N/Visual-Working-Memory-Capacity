@@ -4,6 +4,7 @@
 %
 % Federico Ramírez-Toraño 09/2025
 %-------------------------------------------------------------------------
+clc
 clear
 close all
 warning('off','MATLAB:dispatcher:InexactMatch');  % turn off the case mismatch warning (it's annoying)

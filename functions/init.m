@@ -1,18 +1,8 @@
 function [p,win,stim] = init(prefs)
 
-% Options
-p.is_PC = ispc;  % ispc function detects if it's a pc computer or not
-p.windowed = 0; % 1 = small win for easy debugging!
-p.startClick = 0; % in the discrete WR report experiment -- click to start trial if 1.
-p.showInstruct = 0; % keep the instructions on the screen the whole time in the change detection experiment
-p.screenNumber = prefs.screenNumber;
-p.parallel_port = hex2dec('3FE0');  % Set your port address here
-
-
 % Output directory
-p.output_dir = fullfile('.','data','conductual');
-if ~exist(p.output_dir)
-    mkdir(p.output_dir)
+if ~exist(prefs.output_dir)
+    mkdir(prefs.output_dir)
 end
 
 % Create the output file
