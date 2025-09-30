@@ -29,7 +29,7 @@ instruct(win)
 %---------------------------------------------------
 %%%%%%% TRIGGER START %%%%%%%
 tStart_experiment = tic;
-send_parallel_trigger(prefs.parallel_port, 4);
+send_trigger(prefs.parallel_port, 4);
 stim.triggers.block(end+1) = 1;
 stim.triggers.trial(end+1) = 1;
 stim.triggers.value(end+1) = 4;
@@ -79,7 +79,7 @@ for b = 1:prefs.numBlocks
         Screen('Flip',win.onScreen);
 
         %%%%%%% TRIGGER ITI %%%%%%%
-        send_parallel_trigger(prefs.parallel_port, 8);
+        send_trigger(prefs.parallel_port, 8);
         stim.triggers.block(end+1) = b;
         stim.triggers.trial(end+1) = t;
         stim.triggers.value(end+1) = 8;
@@ -98,7 +98,7 @@ for b = 1:prefs.numBlocks
         Screen('Flip',win.onScreen);
 
         %%%%%%% TRIGGER MEMORY ARRAY %%%%%%%
-        send_parallel_trigger(prefs.parallel_port, 16);
+        send_trigger(prefs.parallel_port, 16);
         stim.triggers.block(end+1) = b;
         stim.triggers.trial(end+1) = t;
         stim.triggers.value(end+1) = 16;
@@ -114,7 +114,7 @@ for b = 1:prefs.numBlocks
         Screen('Flip',win.onScreen);
 
         %%%%%%% TRIGGER Retention %%%%%%%
-        send_parallel_trigger(prefs.parallel_port, 24);
+        send_trigger(prefs.parallel_port, 24);
         stim.triggers.block(end+1) = b;
         stim.triggers.trial(end+1) = t;
         stim.triggers.value(end+1) = 24;
@@ -171,11 +171,11 @@ for b = 1:prefs.numBlocks
 
         %%%%%%% TRIGGER Presentation Same / Presentation Different %%%%%%%
         if change == 0
-          send_parallel_trigger(prefs.parallel_port, 32);
+          send_trigger(prefs.parallel_port, 32);
           stim.triggers.value(end+1) = 32;
 
         else
-          send_parallel_trigger(prefs.parallel_port, 40);
+          send_trigger(prefs.parallel_port, 40);
           stim.triggers.value(end+1) = 40;
         end
         stim.triggers.block(end+1) = b;
@@ -200,10 +200,10 @@ for b = 1:prefs.numBlocks
 
         %%%%%%% TRIGGER Answer Same / Answer Different %%%%%%%
         if kp == prefs.keys.same_color
-          send_parallel_trigger(prefs.parallel_port, 1);
+          send_trigger(prefs.parallel_port, 1);
           stim.triggers.value(end+1) = 1;
         elseif kp == prefs.keys.different_color
-          send_parallel_trigger(prefs.parallel_port, 2);
+          send_trigger(prefs.parallel_port, 2);
           stim.triggers.value(end+1) = 2;
         end
         stim.triggers.block(end+1) = b;
@@ -256,10 +256,10 @@ for b = 1:prefs.numBlocks
 ##
 ##                    %%%%%%% TRIGGER Answer Same / Answer Different %%%%%%%
 ##                    if kp == prefs.keys.same_color
-##                      send_parallel_trigger(prefs.parallel_port, 1);
+##                      send_trigger(prefs.parallel_port, 1);
 ##                      stim.triggers.value(end+1) = 1;
 ##                    elseif kp == prefs.keys.different_color
-##                      send_parallel_trigger(prefs.parallel_port, 2);
+##                      send_trigger(prefs.parallel_port, 2);
 ##                      stim.triggers.value(end+1) = 2;
 ##                    end
 ##                    stim.triggers.block(end+1) = b;
@@ -306,7 +306,7 @@ for b = 1:prefs.numBlocks
     if b<prefs.numBlocks
 
         %%%%%%% TRIGGER Break %%%%%%%
-        send_parallel_trigger(prefs.parallel_port, 128);
+        send_trigger(prefs.parallel_port, 128);
         stim.triggers.block(end+1) = b;
         stim.triggers.trial(end+1) = t;
         stim.triggers.value(end+1) = 128;
@@ -359,7 +359,7 @@ for b = 1:prefs.numBlocks
     if b == prefs.numBlocks
 
         %%%%%%% TRIGGER End %%%%%%%
-        send_parallel_trigger(prefs.parallel_port, 252);
+        send_trigger(prefs.parallel_port, 252);
         stim.triggers.block(end+1) = b;
         stim.triggers.trial(end+1) = t;
         stim.triggers.value(end+1) = 252;
