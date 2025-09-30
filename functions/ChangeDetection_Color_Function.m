@@ -185,95 +185,64 @@ for b = 1:prefs.numBlocks
         % Wait for a response
         rtStart = GetSecs;
 
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        % BORRAR
+        while KbCheck; end;
 
-        % Creo respuesta automática
-        response = rand();
-        if response > 0.5
-          kp =  prefs.keys.different_color;
-        else
-          kp =  prefs.keys.same_color;
-        endif
-        pause(response);
+        % Check the answer
+        while 1
 
-        %%%%%%% TRIGGER Answer Same / Answer Different %%%%%%%
-        if kp == prefs.keys.same_color
-          send_trigger(prefs.parallel_port, 1);
-          stim.triggers.value(end+1) = 1;
-        elseif kp == prefs.keys.different_color
-          send_trigger(prefs.parallel_port, 2);
-          stim.triggers.value(end+1) = 2;
+            % Check the keyboard
+            [keyIsDown,secs,keyCode]=KbCheck;
+
+            if keyIsDown
+
+                % if escape is pressed, bail out
+                if keyCode(prefs.keys.escape)
+
+                    %ListenChar(0);
+
+                    % save data file at the end of each block
+                    save(prefs.fileName,'p','stim','prefs');
+
+                    Screen('CloseAll');
+
+                    return;
+
+                end
+
+                % Get the code
+                kp = find(keyCode);
+
+                % Some keys (as Control) have two numbers. The important
+                % one is the second
+                if numel(kp) > 1
+                    kp = kp(2);
+                end
+
+                % Only consider the answer buttons
+                if kp == prefs.keys.different_color || kp == prefs.keys.same_color % previously 90/191, PC
+
+                    stim.response(t,b)=kp;
+                    rtEnd = GetSecs;
+                    stim.rt(t,b) = rtEnd-rtStart;
+
+                    %%%%%%% TRIGGER Answer Same / Answer Different %%%%%%%
+                    if kp == prefs.keys.same_color
+                      send_trigger(prefs.parallel_port, 1);
+                      stim.triggers.value(end+1) = 1;
+                    elseif kp == prefs.keys.different_color
+                      send_trigger(prefs.parallel_port, 2);
+                      stim.triggers.value(end+1) = 2;
+                    end
+                    stim.triggers.block(end+1) = b;
+                    stim.triggers.trial(end+1) = t;
+                    stim.triggers.onset(end+1) = toc(tStart_experiment);
+
+                    break
+
+                end
+            end
         end
-        stim.triggers.block(end+1) = b;
-        stim.triggers.trial(end+1) = t;
-        stim.triggers.onset(end+1) = toc(tStart_experiment);
 
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        % RESTABLECER
-
-##        while KbCheck; end;
-##
-##        % Check the answer
-##        while 1
-##
-##            % Check the keyboard
-##            [keyIsDown,secs,keyCode]=KbCheck;
-##
-##            if keyIsDown
-##
-##                % if escape is pressed, bail out
-##                if keyCode(prefs.keys.escape)
-##
-##                    %ListenChar(0);
-##
-##                    % save data file at the end of each block
-##                    save(prefs.fileName,'p','stim','prefs');
-##
-##                    Screen('CloseAll');
-##
-##                    return;
-##
-##                end
-##
-##                % Get the code
-##                kp = find(keyCode);
-##
-##                % Some keys (as Control) have two numbers. The important
-##                % one is the second
-##                if numel(kp) > 1
-##                    kp = kp(2);
-##                end
-##
-##                % Only consider the answer buttons
-##                if kp == prefs.keys.different_color || kp == prefs.keys.same_color % previously 90/191, PC
-##
-##                    stim.response(t,b)=kp;
-##                    rtEnd = GetSecs;
-##                    stim.rt(t,b) = rtEnd-rtStart;
-##
-##                    %%%%%%% TRIGGER Answer Same / Answer Different %%%%%%%
-##                    if kp == prefs.keys.same_color
-##                      send_trigger(prefs.parallel_port, 1);
-##                      stim.triggers.value(end+1) = 1;
-##                    elseif kp == prefs.keys.different_color
-##                      send_trigger(prefs.parallel_port, 2);
-##                      stim.triggers.value(end+1) = 2;
-##                    end
-##                    stim.triggers.block(end+1) = b;
-##                    stim.triggers.trial(end+1) = t;
-##                    stim.triggers.onset(end+1) = toc(tStart_experiment);
-##
-##                    break
-##
-##                end
-##            end
-##        end
-
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
         % Draw a empty screen with a fixation point again
         Screen('FillRect',win.onScreen,win.foreColor,win.foreRect);            % Draw the foreground win
@@ -328,31 +297,19 @@ for b = 1:prefs.numBlocks
 
         Screen('Flip', win.onScreen);
 
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        % BORRAR
-        pause(30);
-
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        % RESTABLECER
-
         % Wait for a spacebar press to continue with next block
-##        while 1
-##            [keyIsDown,secs,keyCode]=KbCheck;
-##            if keyIsDown
-##                kp = find(keyCode);
-##                if numel(kp) > 1
-##                    kp = kp(2);
-##                end
-##                if kp == prefs.keys.space
-##                    break;
-##                end
-##            end
-##        end
-
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        while 1
+            [keyIsDown,secs,keyCode]=KbCheck;
+            if keyIsDown
+                kp = find(keyCode);
+                if numel(kp) > 1
+                    kp = kp(2);
+                end
+                if kp == prefs.keys.space
+                    break;
+                end
+            end
+        end
 
     end
 
@@ -381,31 +338,19 @@ for b = 1:prefs.numBlocks
 
         Screen('Flip', win.onScreen);
 
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        % BORRAR
-        pause(30);
-
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        % RESTABLECER
-
         % Wait for a spacebar press to continue with next block
-##        while 1
-##            [keyIsDown,secs,keyCode]=KbCheck;
-##            if keyIsDown
-##                kp = find(keyCode);
-##                if numel(kp) > 1
-##                    kp = kp(2);
-##                end
-##                if kp == prefs.keys.space
-##                    break;
-##                end
-##            end
-##        end
-
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        while 1
+            [keyIsDown,secs,keyCode]=KbCheck;
+            if keyIsDown
+                kp = find(keyCode);
+                if numel(kp) > 1
+                    kp = kp(2);
+                end
+                if kp == prefs.keys.space
+                    break;
+                end
+            end
+        end
 
     end
 
