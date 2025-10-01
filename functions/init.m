@@ -14,6 +14,7 @@ while not_valid
     box = inputdlg(prompt,'');
     prefs.subNum = box{1};
     fileName = [prefs.output_dir,filesep, prefs.subNum, '_ColorK.mat'];
+    fileName_MATLAB = [prefs.output_dir,filesep, prefs.subNum, '_ColorK_MATLAB.mat'];
 
     % If exist, overwrite?
     if exist (fileName)
@@ -33,6 +34,7 @@ while not_valid
 
 end
 prefs.fileName = fileName;
+prefs.fileName_MATLAB = fileName_MATLAB;
 
 % Initiate a random state
 prefs.rndSeed = sum(100*clock);
