@@ -15,6 +15,7 @@ addpath('../functions/');
 
 % Define the triggers and the output port
 triggers = [4, 8, 16, 24, 32, 40 , 1, 2, 128 , 252];
+triggers = [8, 16, 24, 32, 40, 48, 1, 2, 64, 72];
 parallel_port = 16360; %hex2dec('3FE0'); %16360 3FE8
 trigger_index = 1;
 

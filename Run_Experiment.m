@@ -2,7 +2,7 @@
 % Run a Visual Working Memory Capacity task based on Luck and Vogel (1997)
 % Modifications to "Kirsten Adam, June 2014 (updated Oct 2014) "
 %
-% Federico Ram√≠rez-Tora√±o 09/2025
+% Federico Ramirez-Toraè´–o 09/2025
 %-------------------------------------------------------------------------
 clc
 clear
@@ -12,6 +12,10 @@ AssertOpenGL;    % make sure openGL rendering is working (aka psychtoolbox is on
 
 % Add the paths of interest
 addpath('./functions')
+
+% Put up instructions
+%%%%% The instructions should be auto-content, with a special windows and so.
+#instruct(win)
 
 % Config options
 prefs = getPreferences();

@@ -3,7 +3,7 @@
 % Vogel (1997).
 % Programmed by Kirsten Adam 2012 (updated June 2014)
 %
-%  "change" is "m", "no change" = "z" key
+%  "change" is "Ctrl Left", "no change" = "Control Right" key
 %
 %  RECENT UPDATES:
 %   - added text reminder of key mapping that stays on the screen
@@ -21,7 +21,6 @@ function ChangeDetection_Color_Function(prefs,win,stim)
     % set the random state to the random seed at the beginning of the experiment!!
     rng(prefs.rndSeed);
 
-    % Put up instructions
     instruct(win)
 
     %---------------------------------------------------
@@ -29,10 +28,10 @@ function ChangeDetection_Color_Function(prefs,win,stim)
     %---------------------------------------------------
     %%%%%%% TRIGGER START %%%%%%%
     tStart_experiment = tic;
-    send_trigger(prefs.parallel_port, 4);
+    send_trigger(prefs.parallel_port, 8);
     stim.triggers.block(end+1) = 1;
     stim.triggers.trial(end+1) = 1;
-    stim.triggers.value(end+1) = 4;
+    stim.triggers.value(end+1) = 8;
     stim.triggers.onset(end+1) = toc(tStart_experiment);
 
     for b = 1:prefs.numBlocks
@@ -71,22 +70,23 @@ function ChangeDetection_Color_Function(prefs,win,stim)
             stim.itemColors{t,b} = colorIndex(1:nItems);
 
             % ITI screen
-            Screen('FillRect',win.onScreen,win.foreColor,win.foreRect);
+            draw_screen_mask(win);
             Screen('FillOval',win.onScreen,win.black,win.fixRect);
             Screen('DrawingFinished',win.onScreen);
             Screen('Flip',win.onScreen);
 
             %%%%%%% TRIGGER ITI %%%%%%%
-            send_trigger(prefs.parallel_port, 8);
+            send_trigger(prefs.parallel_port, 16);
             stim.triggers.block(end+1)  = b;
             stim.triggers.trial(end+1)  = t;
-            stim.triggers.value(end+1)  = 8;
+            stim.triggers.value(end+1)  = 16;
             stim.triggers.onset(end+1)  = toc(tStart_experiment);
 
             % fixation interval
             WaitSecs(prefs.ITI);
 
             % Draw sample squares
+            draw_screen_mask(win);
             Screen('FillRect',win.onScreen,win.foreColor,win.foreRect);
             Screen('FillOval',win.onScreen,win.black,win.fixRect);
             for i = 1:nItems
@@ -99,26 +99,27 @@ function ChangeDetection_Color_Function(prefs,win,stim)
             Screen('Flip',win.onScreen);
 
             %%%%%%% TRIGGER MEMORY ARRAY %%%%%%%
-            send_trigger(prefs.parallel_port, 16);
+            send_trigger(prefs.parallel_port, 24);
             stim.triggers.block(end+1)  = b;
             stim.triggers.trial(end+1)  = t;
-            stim.triggers.value(end+1)  = 16;
+            stim.triggers.value(end+1)  = 24;
             stim.triggers.onset(end+1)  = toc(tStart_experiment);
 
             % Wait sample duration
             WaitSecs(prefs.stimulusDuration);
 
             % Retention
+            draw_screen_mask(win);
             Screen('FillRect',win.onScreen,win.foreColor,win.foreRect);
             Screen('FillOval',win.onScreen,win.black,win.fixRect);
             Screen('DrawingFinished',win.onScreen);
             Screen('Flip',win.onScreen);
 
             %%%%%%% TRIGGER Retention %%%%%%%
-            send_trigger(prefs.parallel_port, 24);
+            send_trigger(prefs.parallel_port, 32);
             stim.triggers.block(end+1)  = b;
             stim.triggers.trial(end+1)  = t;
-            stim.triggers.value(end+1)  = 24;
+            stim.triggers.value(end+1)  = 32;
             stim.triggers.onset(end+1)  = toc(tStart_experiment);
 
             % wait ISI
@@ -147,6 +148,7 @@ function ChangeDetection_Color_Function(prefs,win,stim)
             changeColor = win.colors(ind,:);
 
             % Probe screen
+            draw_screen_mask(win);
             Screen('FillRect',win.onScreen,win.foreColor,win.foreRect);
             Screen('FillOval',win.onScreen,win.black,win.fixRect);
 
@@ -170,11 +172,11 @@ function ChangeDetection_Color_Function(prefs,win,stim)
 
             %%%%%%% TRIGGER Probe %%%%%%%
             if change == 0
-                send_trigger(prefs.parallel_port, 32);
-                stim.triggers.value(end+1) = 32;
-            else
                 send_trigger(prefs.parallel_port, 40);
                 stim.triggers.value(end+1) = 40;
+            else
+                send_trigger(prefs.parallel_port, 48);
+                stim.triggers.value(end+1) = 48;
             end
             stim.triggers.block(end+1) = b;
             stim.triggers.trial(end+1) = t;
@@ -187,6 +189,9 @@ function ChangeDetection_Color_Function(prefs,win,stim)
             while 1
                 [keyIsDown,secs,keyCode] = KbCheck;
 
+                %%%%%%%%%%%%%%% RESTABLECER
+                keyIsDown = 1;
+
                 if keyIsDown
                     % escape = exit
                     if keyCode(prefs.keys.escape)
@@ -195,7 +200,9 @@ function ChangeDetection_Color_Function(prefs,win,stim)
                         return;
                     end
 
-                    kp = find(keyCode);
+                    %%%%%%%%%%%%%%% RESTABLECER
+#                    kp = find(keyCode);
+                    kp = prefs.keys.different_color;
                     if numel(kp) > 1, kp = kp(2); end
 
                     if kp == prefs.keys.different_color || kp == prefs.keys.same_color
@@ -220,6 +227,7 @@ function ChangeDetection_Color_Function(prefs,win,stim)
             end
 
             % fixation again
+            draw_screen_mask(win);
             Screen('FillRect',win.onScreen,win.foreColor,win.foreRect);
             Screen('FillOval',win.onScreen,win.black,win.fixRect);
             Screen('DrawingFinished',win.onScreen);
@@ -237,10 +245,10 @@ function ChangeDetection_Color_Function(prefs,win,stim)
         % break or end block
         if b < prefs.numBlocks
             % Break screen
-            send_trigger(prefs.parallel_port, 128);
+            send_trigger(prefs.parallel_port, 64);
             stim.triggers.block(end+1) = b;
             stim.triggers.trial(end+1) = t;
-            stim.triggers.value(end+1) = 128;
+            stim.triggers.value(end+1) = 64;
             stim.triggers.onset(end+1) = toc(tStart_experiment);
 
             Screen('TextSize',win.onScreen,120);
@@ -258,43 +266,45 @@ function ChangeDetection_Color_Function(prefs,win,stim)
 
             Screen('Flip', win.onScreen);
 
-            while 1
-                [keyIsDown,secs,keyCode] = KbCheck;
-                if keyIsDown
-                    kp = find(keyCode);
-                    if numel(kp) > 1, kp = kp(2); end
-                    if kp == prefs.keys.space
-                        break;
-                    end
-                end
-            end
+%%%%%%%%%%%%%%% RESTABLECER
+#            while 1
+#                [keyIsDown,secs,keyCode] = KbCheck;
+#                if keyIsDown
+#                    kp = find(keyCode);
+#                    if numel(kp) > 1, kp = kp(2); end
+#                    if kp == prefs.keys.space
+#                        break;
+#                    end
+#                end
+#            end
 
         else
             % End of experiment
-            send_trigger(prefs.parallel_port, 252);
+            send_trigger(prefs.parallel_port, 72);
             stim.triggers.block(end+1) = b;
             stim.triggers.trial(end+1) = t;
-            stim.triggers.value(end+1) = 252;
+            stim.triggers.value(end+1) = 72;
             stim.triggers.onset(end+1) = toc(tStart_experiment);
 
             Screen('TextSize',win.onScreen,60);
             Screen('TextFont',win.onScreen,'Arial');
-            DrawFormattedText(win.onScreen, 'Â¡El experimento ha terminado!', 'center',win.centerY-50,win.white);
+            DrawFormattedText(win.onScreen, '¢ÂEl experimento ha terminado!', 'center',win.centerY-50,win.white);
 
             Screen('TextSize',win.onScreen,32);
             DrawFormattedText(win.onScreen, 'Por favor, avise al investigador.', 'center',win.centerY+50,win.white);
             Screen('Flip',win.onScreen);
 
-            while 1
-                [keyIsDown,secs,keyCode] = KbCheck;
-                if keyIsDown
-                    kp = find(keyCode);
-                    if numel(kp) > 1, kp = kp(2); end
-                    if kp == prefs.keys.space
-                        break;
-                    end
-                end
-            end
+%%%%%%%%%%%%%%% RESTABLECER
+#            while 1
+#                [keyIsDown,secs,keyCode] = KbCheck;
+#                if keyIsDown
+#                    kp = find(keyCode);
+#                    if numel(kp) > 1, kp = kp(2); end
+#                    if kp == prefs.keys.space
+#                        break;
+#                    end
+#                end
+#            end
 
         end % If end of blocks
 

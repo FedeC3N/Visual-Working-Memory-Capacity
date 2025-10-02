@@ -32,17 +32,29 @@ if prefs.windowed
         % % Compute foreground and fixation rectangles
     win.foreRect = round(win.screenRect./1.35);
     win.foreRect = CenterRect(win.foreRect,win.screenRect);
+
 else
+
+    % Open a gray windows
     [win.onScreen rect] = Screen('OpenWindow', win.screenNumber, [128 128 128],[],[],[],[]);
-    [win.screenX, win.screenY] = Screen('WindowSize', win.onScreen); % check resolution
+    [win.screenX, win.screenY] = Screen('WindowSize', win.onScreen); % check resolution (pixel)
     win.screenRect  = [0 0 win.screenX win.screenY]; % screen rect
-    win.centerX = win.screenX * 0.5; % center of screen in X direction
-    win.centerY = win.screenY * 0.5; % center of screen in Y direction
-    win.centerXL = floor(mean([0 win.centerX])); % center of left half of screen in X direction
-    win.centerXR = floor(mean([win.centerX win.screenX])); % center of right half of screen in X direction
-    % % Compute foreground and fixation rectangles
-    win.foreRect = round(win.screenRect./1.35);
-    win.foreRect = CenterRect(win.foreRect,win.screenRect);
+
+    % === Define the central visible area (replace numbers with your case: 12бы or 14бы) ===
+    win.visibleRect = [580 162 1340 918];   % <-- or [514 98 1406 982] for 14бы
+
+    % === Redefine centers relative to visibleRect ===
+    win.centerX = mean([win.visibleRect(1) win.visibleRect(3)]); % center X of visible window
+    win.centerY = mean([win.visibleRect(2) win.visibleRect(4)]); % center Y of visible window
+
+    % Optional: centers of halves relative to visible area
+    win.centerXL = floor(mean([win.visibleRect(1) win.centerX]));
+    win.centerXR = floor(mean([win.centerX win.visibleRect(3)]));
+
+    % === Foreground and fixation rectangles ===
+    % Instead of scaling by full screen, scale inside visible area:
+    win.foreRect = round(win.visibleRect ./ 1.35);
+    win.foreRect = CenterRect(win.foreRect, win.visibleRect);
 
     HideCursor; % hide the cursor since we're not debugging
 end
