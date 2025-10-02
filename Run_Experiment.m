@@ -17,7 +17,7 @@ addpath('./functions')
 instructions()
 
 % Config options
- prefs = getPreferences();
+prefs = getPreferences();
 
 % Init options
 [prefs,win,stim] = init(prefs);
