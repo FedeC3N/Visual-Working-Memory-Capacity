@@ -189,9 +189,6 @@ function ChangeDetection_Color_Function(prefs,win,stim)
             while 1
                 [keyIsDown,secs,keyCode] = KbCheck;
 
-                %%%%%%%%%%%%%%% RESTABLECER
-                keyIsDown = 1;
-
                 if keyIsDown
                     % escape = exit
                     if keyCode(prefs.keys.escape)
@@ -200,9 +197,7 @@ function ChangeDetection_Color_Function(prefs,win,stim)
                         return;
                     end
 
-                    %%%%%%%%%%%%%%% RESTABLECER
-#                    kp = find(keyCode);
-                    kp = prefs.keys.different_color;
+                    kp = find(keyCode);
                     if numel(kp) > 1, kp = kp(2); end
 
                     if kp == prefs.keys.different_color || kp == prefs.keys.same_color
@@ -266,17 +261,16 @@ function ChangeDetection_Color_Function(prefs,win,stim)
 
             Screen('Flip', win.onScreen);
 
-%%%%%%%%%%%%%%% RESTABLECER
-#            while 1
-#                [keyIsDown,secs,keyCode] = KbCheck;
-#                if keyIsDown
-#                    kp = find(keyCode);
-#                    if numel(kp) > 1, kp = kp(2); end
-#                    if kp == prefs.keys.space
-#                        break;
-#                    end
-#                end
-#            end
+            while 1
+                [keyIsDown,secs,keyCode] = KbCheck;
+                if keyIsDown
+                    kp = find(keyCode);
+                    if numel(kp) > 1, kp = kp(2); end
+                    if kp == prefs.keys.space
+                        break;
+                    end
+                end
+            end
 
         else
             % End of experiment
@@ -294,17 +288,16 @@ function ChangeDetection_Color_Function(prefs,win,stim)
             DrawFormattedText(win.onScreen, 'Por favor, avise al investigador.', 'center',win.centerY+50,win.white);
             Screen('Flip',win.onScreen);
 
-%%%%%%%%%%%%%%% RESTABLECER
-#            while 1
-#                [keyIsDown,secs,keyCode] = KbCheck;
-#                if keyIsDown
-#                    kp = find(keyCode);
-#                    if numel(kp) > 1, kp = kp(2); end
-#                    if kp == prefs.keys.space
-#                        break;
-#                    end
-#                end
-#            end
+            while 1
+                [keyIsDown,secs,keyCode] = KbCheck;
+                if keyIsDown
+                    kp = find(keyCode);
+                    if numel(kp) > 1, kp = kp(2); end
+                    if kp == prefs.keys.space
+                        break;
+                    end
+                end
+            end
 
         end % If end of blocks
 
