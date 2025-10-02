@@ -288,7 +288,7 @@ function ChangeDetection_Color_Function(prefs,win,stim)
 
             Screen('TextSize',win.onScreen,60);
             Screen('TextFont',win.onScreen,'Arial');
-            DrawFormattedText(win.onScreen, 'è¢¬El experimento ha terminado!', 'center',win.centerY-50,win.white);
+            DrawFormattedText(win.onScreen, '¬°El experimento ha terminado!', 'center',win.centerY-50,win.white);
 
             Screen('TextSize',win.onScreen,32);
             DrawFormattedText(win.onScreen, 'Por favor, avise al investigador.', 'center',win.centerY+50,win.white);
@@ -312,7 +312,7 @@ function ChangeDetection_Color_Function(prefs,win,stim)
 
     % Save the file in several versions
     save(prefs.fileName, "prefs", "stim");               % formato binario por defecto
-    save("-mat7-binary", prefs.fileName_MATLAB, "prefs", "stim"); % formato MATLAB v7 (mè´°s compatible)
+    save("-mat7-binary", prefs.fileName_MATLAB, "prefs", "stim"); % formato MATLAB v7 (mÔøΩÔøΩÔøΩs compatible)
 
 end % end function
 
