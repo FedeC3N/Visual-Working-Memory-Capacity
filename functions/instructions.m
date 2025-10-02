@@ -90,9 +90,9 @@ stim.triggers = struct('block', [],'trial',[],'value',[],'onset',[]);
 end
 
 
+
 function first_instruction(win)
 
-##InstructImage = imread([pwd,'/Instructions_CD'],'png','BackgroundColor',[win.gray/255,win.gray/255,win.gray/255]);
 filename = fullfile('.','functions','Instructions_CD.png');  % include extension
 [img, ~, alpha] = imread(filename);
 

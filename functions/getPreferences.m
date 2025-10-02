@@ -18,7 +18,7 @@ prefs.screenNumber = max(Screen('Screens'));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% Design conditions
-prefs.numBlocks = 4;
+prefs.numBlocks = 5;
 prefs.nTrialsPerCondition = 10; % Per condition and block
 prefs.setSizes = [4,6,8]; % Condition = Number of squares presented
 prefs.change = [0,1];
