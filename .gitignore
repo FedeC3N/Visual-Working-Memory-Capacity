@@ -2,6 +2,7 @@
 *.c
 
 # Ignore subject Data
+data/
 *.mat
 
 # Ignore photo
@@ -13,3 +14,6 @@ Psychtoolbox/
 # Igonre triggers information
 triggers/
 psychtoolbox_unified_keynames.txt
+
+# Ignore the test I have been making
+pruebas/
